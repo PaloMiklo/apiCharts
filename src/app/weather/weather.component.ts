@@ -35,17 +35,13 @@ export class WeatherComponent implements OnDestroy {
               {
                 data: temperatures,
                 borderColor: '#0eb4f1',
-                fill: false
+                fill: true
               }
             ]
           },
           options: {
             legend: {
               display: false
-              // position: 'top'
-              // labels: {
-              //   fontColor: 'red'
-              // }
             },
             scales: {
               xAxes: [
