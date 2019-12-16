@@ -4,6 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
+import { HttpClientModule } from '@angular/common/http';
+import { HomeService } from './home/home.service';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -32,9 +34,13 @@ const routes: Routes = [
 @NgModule({
   declarations: [AppComponent, HomeComponent],
 
-  imports: [BrowserModule, RouterModule.forRoot(routes, { useHash: true })],
+  imports: [
+    BrowserModule,
+    RouterModule.forRoot(routes, { useHash: true }),
+    HttpClientModule
+  ],
 
-  providers: [],
+  providers: [HomeService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

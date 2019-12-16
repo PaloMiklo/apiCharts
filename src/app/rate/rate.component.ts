@@ -1,7 +1,7 @@
+import { HomeService } from './../home/home.service';
 import { Chart } from 'chart.js';
 import { environment } from './../../environments/environment';
-import { Component, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnDestroy, Input } from '@angular/core';
 
 import { RateService } from './../model/_services/rate.service';
 import { Subscription } from 'rxjs';
@@ -13,29 +13,41 @@ import { Subscription } from 'rxjs';
 })
 export class RateComponent implements OnDestroy {
   public rateChart: Chart = [];
-  public amount: number;
   public date: string | any;
+  public amount: number;
   public start = false;
 
-  private timer: any;
   private currency: string = environment.rate.currency;
   private subscription: Subscription;
+  private timer: any;
 
-  constructor(private http: HttpClient, private rateService: RateService) {
+  private initialDate: string;
+  private initCurrVal: number;
+
+  constructor(
+    private rateService: RateService,
+    private homeService: HomeService
+  ) {
+
+    this.homeService.initDate$.subscribe(date => (this.initialDate = date));
+    this.homeService.initCurrVal$.subscribe(val => (this.initCurrVal = val));
+    // console.log(this.initialDate);
+    // console.log(this.initCurrVal);
+
     this.subscription = rateService
       .getRate(this.currency)
       .subscribe((o: any) => {
-        const czk = o.rates['CZK'];
-        this.amount = czk;
+        const curr = o.rates['CZK'];
+        this.amount = curr;
         this.date = o['date'] + new Date().toLocaleTimeString();
 
         this.rateChart = new Chart('canvas', {
           type: 'line',
           data: {
-            labels: [],
+            labels: [this.initialDate],
             datasets: [
               {
-                data: [],
+                data: [this.initCurrVal],
                 borderColor: '#B22222',
                 fill: true,
                 fillColor: '#ffff00'
@@ -62,29 +74,29 @@ export class RateComponent implements OnDestroy {
         });
       });
     this.timer = setInterval(() => {
-      this.getDates();
       this.getValues();
-    }, 1000);
+      this.getDates();
+    }, 2000);
   }
 
-  getDates() {
+  private getValues() {
     this.subscription = this.rateService
       .getRate(this.currency)
       .subscribe((o: any) => {
-        const czk = o.rates['CZK'];
-        this.amount = czk;
+        const curr = o.rates['CZK'];
+        this.amount = curr;
         this.rateChart['data'].datasets.forEach(dataset => {
-          dataset.data.push(czk);
+          dataset.data.push(curr);
         }),
           this.rateChart.update();
       });
   }
 
-  getValues(): void {
+  private getDates(): void {
     this.subscription = this.rateService
       .getRate(this.currency)
       .subscribe((o: any) => {
-        this.date = o['date'] + new Date().toLocaleTimeString();
+        this.date = o['date'] + ' ' + new Date().toLocaleTimeString();
         this.rateChart['data'].labels.push(this.date);
         this.rateChart.update();
       });

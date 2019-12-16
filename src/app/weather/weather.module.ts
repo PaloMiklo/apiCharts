@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WeatherComponent } from './weather.component';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
 
 const routing = RouterModule.forChild([
   { path: '', component: WeatherComponent },
@@ -11,7 +10,7 @@ const routing = RouterModule.forChild([
 ]);
 
 @NgModule({
-  imports: [CommonModule, routing, HttpClientModule],
+  imports: [CommonModule, routing],
   providers: [WeatherService],
   declarations: [WeatherComponent]
 })

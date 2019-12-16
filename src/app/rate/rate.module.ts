@@ -1,4 +1,3 @@
-import { HttpClientModule } from '@angular/common/http';
 import { RateService } from './../model/_services/rate.service';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -11,7 +10,7 @@ const routing = RouterModule.forChild([
 ]);
 
 @NgModule({
-  imports: [CommonModule, routing, HttpClientModule],
+  imports: [CommonModule, routing],
   providers: [RateService],
   declarations: [RateComponent]
 })
